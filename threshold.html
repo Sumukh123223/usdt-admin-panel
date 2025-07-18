@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Set USDT Threshold</title>
+</head>
+<body style="text-align:center; margin-top:50px;">
+  <h2>Update Global USDT Threshold</h2>
+  <input type="number" id="thresholdInput" step="0.01" placeholder="e.g. 10"><br><br>
+  <input type="password" id="adminPass" placeholder="Admin Password"><br><br>
+  <button onclick="submitThreshold()">Save</button>
+  <p id="status"></p>
+
+  <script>
+    async function submitThreshold() {
+      const value = parseFloat(document.getElementById("thresholdInput").value);
+      const password = document.getElementById("adminPass").value;
+
+      if (isNaN(value) || value < 0) {
+        document.getElementById("status").innerText = "⚠️ Enter a valid threshold value";
+        return;
+      }
+
+      if (!password) {
+        document.getElementById("status").innerText = "⚠️ Password is required";
+        return;
+      }
+
+      const res = await fetch("save_threshold.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          usdtThreshold: value,
+          password: password
+        })
+      });
+
+      const text = await res.text();
+      document.getElementById("status").innerText = text;
+    }
+  </script>
+</body>
+</html>

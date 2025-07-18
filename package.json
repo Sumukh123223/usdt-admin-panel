@@ -1,0 +1,14 @@
+{
+  "name": "usdt-backend",
+  "version": "1.0.0",
+  "description": "Simple USDT BEP20 backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "web3": "^1.10.0"
+  }
+}
